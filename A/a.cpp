@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <chrono>
+using namespace std::chrono;
 
 bool hasSolution = false;   //Flag used to verify if a solution has been found
 int solutionUsedMoves;   //Used to print out the result, and optimizations
@@ -141,7 +143,6 @@ std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldB
 void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction, std::vector<int> gameBoard) {
     std::vector<int> newBoard = executeMove(direction, boardSize, gameBoard);
     if(checkForSolution(newBoard)){
-
         hasSolution = true;
         if (solutionUsedMoves > maxMoves - remainingMoves){
             solutionUsedMoves = maxMoves - remainingMoves;
@@ -194,6 +195,7 @@ int main() {
 
     std::cin >> testCases;
 
+    auto start = high_resolution_clock::now();
     for (int game = 0; game < testCases; ++game) {
         std::cin >> boardSize;
         std::cin >> maxMoves;
@@ -208,5 +210,8 @@ int main() {
         solveBoard(maxMoves, boardSize, gameBoard);
         gameBoard.clear(); //reset vector
     }
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    std::cout << "Time: " << duration.count() << "\n";
     return 0;
 }
