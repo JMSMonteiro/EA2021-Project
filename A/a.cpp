@@ -61,12 +61,9 @@ std::vector<int> addValues(std::vector<int> values, int boardSize) {
     return values;
 }
 
-std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldBoard) {
-    std::vector<int> newBoard = oldBoard;
+std::vector<int> executeMove(int direction, int boardSize, std::vector<int> newBoard) {
     std::vector<int> auxValues;
     int tempValue;
-
-    //auxValues.reserve(boardSize);
 
     switch (direction){
         case 1:     //UP
@@ -77,9 +74,11 @@ std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldB
                         auxValues.push_back(tempValue);
                     }
                 }
-                auxValues = addValues(auxValues, boardSize);
-                for (int row = 0; row < boardSize; ++row) {
-                    newBoard[row * boardSize + col] = auxValues[row];
+                if (!auxValues.empty()) {
+                    auxValues = addValues(auxValues, boardSize);
+                    for (int row = 0; row < boardSize; ++row) {
+                        newBoard[row * boardSize + col] = auxValues[row];
+                    }
                 }
                 auxValues.clear();
             }
@@ -93,9 +92,11 @@ std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldB
                         auxValues.push_back(tempValue);
                     }
                 }
-                auxValues = addValues(auxValues, boardSize);
-                for (int row = boardSize - 1; row >= 0; --row) {
-                    newBoard[row * boardSize + col] = auxValues[row];
+                if (!auxValues.empty()) {
+                    auxValues = addValues(auxValues, boardSize);
+                    for (int row = boardSize - 1; row >= 0; --row) {
+                        newBoard[row * boardSize + col] = auxValues[row];
+                    }
                 }
                 auxValues.clear();
             }
@@ -109,9 +110,11 @@ std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldB
                         auxValues.push_back(tempValue);
                     }
                 }
-                auxValues = addValues(auxValues, boardSize);
-                for (int col = 0; col < boardSize; ++col) {
-                    newBoard[row * boardSize + col] = auxValues[col];
+                if (!auxValues.empty()) {
+                    auxValues = addValues(auxValues, boardSize);
+                    for (int col = 0; col < boardSize; ++col) {
+                        newBoard[row * boardSize + col] = auxValues[col];
+                    }
                 }
                 auxValues.clear();
             }
@@ -126,10 +129,12 @@ std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldB
                         auxValues.push_back(tempValue);
                     }
                 }
-                auxValues = addValues(auxValues, boardSize);
+                if (!auxValues.empty()) {
+                    auxValues = addValues(auxValues, boardSize);
                 for (int col = boardSize - 1; col >= 0; --col) {
                     newBoard[row * boardSize + col] = auxValues[col];
                 }
+            }
                 auxValues.clear();
             }
             break;
@@ -162,10 +167,28 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
         */
         return;
     }
-    executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
-    executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
-    executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
-    executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
+    switch (direction) {
+        case 1:
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
+            break;
+        case 2:
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
+            break;
+        case 3:
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
+            break;
+        case 4:
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
+            executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
+            break;
+    }
 }
 
 void solveBoard(int maxMoves, int boardSize, std::vector<int> gameBoard) {
