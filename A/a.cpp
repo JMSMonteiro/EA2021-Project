@@ -173,7 +173,7 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
         return;
     }
     switch (direction) {
-        case 1:
+        case 1:     //UP
             if (canMoveSameDir) {
                 executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             }
@@ -181,7 +181,7 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             break;
-        case 2:
+        case 2:     //DOWN
             if (canMoveSameDir) {
                 executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             }
@@ -189,7 +189,7 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
             break;
-        case 3:
+        case 3:     //LEFT
             if (canMoveSameDir) {
                 executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
             }
@@ -197,7 +197,7 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
             executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             break;
-        case 4:
+        case 4:     //RIGHT
             if (canMoveSameDir) {
                 executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             }
