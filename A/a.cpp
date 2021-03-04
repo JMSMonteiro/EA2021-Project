@@ -9,7 +9,7 @@
 // using namespace std::chrono;
 
 bool hasSolution = false;   //Flag used to verify if a solution has been found
-bool canMoveSameDir = false;
+bool canMoveSameDir = false;//Is not pointless to move same dir again
 int solutionUsedMoves;   //Used to print out the result, and optimizations
 /**
 direction:
