@@ -16,12 +16,38 @@ direction:
     4 -> RIGHT
 */
 
-std::vector<std::vector<int>> executeMove(int direction, std::vector<std::vector<int>> oldBoard) {
-    std::vector<std::vector<int>> newBoard = oldBoard;
+std::vector<int> addValues(std::vector<int> values, int boardSize) {
+    for (int i = 0; int i < values.size() - 1; ++i) {
+        if (values[i] == values[i+1]) {
+            values[i] = values[i] * 2;
+            values.erase(values.begin() + i + 1);
+        }
+    }
+    while (values.size() < boardSize) {
+        values.push_back(0);
+    }
+    return values;
+}
+
+std::vector<int> executeMove(int direction, int boardSize, std::vector<int> oldBoard) {
+    std::vector<int> newBoard = oldBoard;
+    std::vector<int> auxValues;
+    int tempValue;
+
+    //auxValues.reserve(boardSize);
 
     switch (direction){
         case 1:     //UP
-
+                for (int i = 0; i < boardSize; ++i) {
+                    tempValue = newBoard[i*boardSize];
+                    if (tempValue != 0) {
+                        auxValues.push_back(tempValue);
+                    }
+                }
+                auxValues = addValues(auxValues);
+                for (int i = 0; i < auxValues.size(); ++i) {
+                    newBoard[i*boardSize] = auxValues[i];
+                }
 
             break;
 
@@ -47,8 +73,8 @@ std::vector<std::vector<int>> executeMove(int direction, std::vector<std::vector
         return newBoard;
 }
 
-void executeStep(int remainingMoves, int direction, std::vector<std::vector<int>> gameBoard) {
-    std::vector<std::vector<int>> newBoard = executeMove(direction, gameBoard);
+void executeStep(int remainingMoves, int boardSize, int direction, std::vector<int> gameBoard) {
+    std::vector<int> newBoard = executeMove(direction, boardSize, gameBoard);
 
     if (remainingMoves <= 0 || remainingMoves < remainingMovesSolved || gameBoard == newBoard) {
         /**
@@ -62,20 +88,20 @@ void executeStep(int remainingMoves, int direction, std::vector<std::vector<int>
         */
         return;
     }
-    executeStep(remainingMoves - 1, 1, newBoard);
-    executeStep(remainingMoves - 1, 2, newBoard);
-    executeStep(remainingMoves - 1, 3, newBoard);
-    executeStep(remainingMoves - 1, 4, newBoard);
+    executeStep(remainingMoves - 1, boardSize, 1, newBoard);
+    executeStep(remainingMoves - 1, boardSize, 2, newBoard);
+    executeStep(remainingMoves - 1, boardSize, 3, newBoard);
+    executeStep(remainingMoves - 1, boardSize, 4, newBoard);
 }
 
-void solveBoard(int maxMoves, std::vector<std::vector<int>> gameBoard) {
+void solveBoard(int maxMoves, int boardSize, std::vector<int> gameBoard) {
     hasSolution = false;                //reset the flag for the new board;
     remainingMovesSolved = maxMoves;    //set remainingMovesSolved to maxMoves
 
-    executeStep(maxMoves, 1, gameBoard);
-    executeStep(maxMoves, 2, gameBoard);
-    executeStep(maxMoves, 3, gameBoard);
-    executeStep(maxMoves, 4, gameBoard);
+    executeStep(maxMoves, boardSize, 1, gameBoard);
+    executeStep(maxMoves, boardSize, 2, gameBoard);
+    executeStep(maxMoves, boardSize, 3, gameBoard);
+    executeStep(maxMoves, boardSize, 4, gameBoard);
 
     if (hasSolution) {
         std::cout << remainingMovesSolved << "\n";
@@ -85,30 +111,43 @@ void solveBoard(int maxMoves, std::vector<std::vector<int>> gameBoard) {
     }
 }
 
+void debugGameBoard(int boardSize, std::vector<int> board) {
+    int row;
+    std::cout << "\n";
+    for (int i = 0; i < boardSize; ++i) {
+        row = i * boardSize;
+        for (int j = 0; j < boardSize; ++j) {
+            std::cout << board[j+row] << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
 
 int main() {
     int testCases;
     int boardSize;
+    int totalElements;
     int maxMoves;
     int auxNumber;
-    std::vector<std::vector<int>> gameBoard; //Data structure to represent the board itself
+    std::vector<int> gameBoard; //Data structure to represent the board itself
 
     std::cin >> testCases;
 
-    for (int i = 0; i < testCases; ++i) {
+    for (int game = 0; game < testCases; ++game) {
         std::cin >> boardSize;
         std::cin >> maxMoves;
+        totalElements = boardSize * boardSize;
 
+        gameBoard.reserve(totalElements);
         //Read Board into Data structure
-        for (int row = 0; row < boardSize; ++row) {
-            //gameBoard.push_back(std::vector<int>);
-            for (int column = 0; column < boardSize; ++column) {
-                std::cin >> auxNumber;
-
-                //Insert auxNumber into data structure position [row][column]
-            }
+        for (int element = 0; element < totalElements; ++element) {
+            std::cin >> auxNumber;
+            gameBoard.push_back(auxNumber);
         }
-        solveBoard(maxMoves, gameBoard);
+        //debugGameBoard(boardSize, gameBoard);
+        solveBoard(maxMoves, boardsize, gameBoard);
+        gameBoard.clear(); //reset vector
     }
     return 0;
 }
