@@ -5,10 +5,11 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <chrono>
-using namespace std::chrono;
+// #include <chrono>
+// using namespace std::chrono;
 
 bool hasSolution = false;   //Flag used to verify if a solution has been found
+bool canMoveSameDir = false;
 int solutionUsedMoves;   //Used to print out the result, and optimizations
 /**
 direction:
@@ -54,6 +55,9 @@ std::vector<int> addValues(std::vector<int> values, int boardSize) {
             values[i] = values[i] * 2;
             values.erase(values.begin() + i + 1);
         }
+        if (i > 0 && values[i] == values[i-1]) {
+            canMoveSameDir = true;
+        }
     }
     while ((int)values.size() < boardSize) {
         values.push_back(0);
@@ -64,6 +68,7 @@ std::vector<int> addValues(std::vector<int> values, int boardSize) {
 std::vector<int> executeMove(int direction, int boardSize, std::vector<int> newBoard) {
     std::vector<int> auxValues;
     int tempValue;
+    canMoveSameDir = false;
 
     switch (direction){
         case 1:     //UP
@@ -169,21 +174,33 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
     }
     switch (direction) {
         case 1:
+            if (canMoveSameDir) {
+                executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
+            }
             executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             break;
         case 2:
+            if (canMoveSameDir) {
+                executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
+            }
             executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
             break;
         case 3:
+            if (canMoveSameDir) {
+                executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
+            }
             executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
             break;
         case 4:
+            if (canMoveSameDir) {
+                executeStep(remainingMoves - 1, maxMoves, boardSize, 4, newBoard);
+            }
             executeStep(remainingMoves - 1, maxMoves, boardSize, 1, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 2, newBoard);
             executeStep(remainingMoves - 1, maxMoves, boardSize, 3, newBoard);
@@ -218,7 +235,7 @@ int main() {
 
     std::cin >> testCases;
 
-    auto start = high_resolution_clock::now();
+    // auto start = high_resolution_clock::now();
     for (int game = 0; game < testCases; ++game) {
         std::cin >> boardSize;
         std::cin >> maxMoves;
@@ -233,8 +250,8 @@ int main() {
         solveBoard(maxMoves, boardSize, gameBoard);
         gameBoard.clear(); //reset vector
     }
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    std::cout << "Time: " << duration.count() << "\n";
+    // auto stop = high_resolution_clock::now();
+    // auto duration = duration_cast<microseconds>(stop - start);
+    // std::cout << "Time: " << duration.count() << "\n";
     return 0;
 }
