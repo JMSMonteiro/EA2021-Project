@@ -59,9 +59,7 @@ std::vector<int> addValues(std::vector<int> values, int boardSize) {
             canMoveSameDir = true;
         }
     }
-    while ((int)values.size() < boardSize) {
-        values.push_back(0);
-    }
+    values.resize(boardSize, 0);
     return values;
 }
 
