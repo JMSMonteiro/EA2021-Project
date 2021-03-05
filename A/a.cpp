@@ -8,9 +8,9 @@
 // #include <chrono>
 // using namespace std::chrono;
 
-bool hasSolution = false;   //Flag used to verify if a solution has been found
-bool canMoveSameDir = false;//Is not pointless to move same dir again
-int solutionUsedMoves;   //Used to print out the result, and optimizations
+bool hasSolution = false;       //Flag used to verify if a solution has been found
+bool canMoveSameDir = false;    //Is not pointless to move same dir again
+int solutionUsedMoves;          //Used to print out the result, and optimizations
 /**
 direction:
     1 -> UP
@@ -18,26 +18,6 @@ direction:
     3 -> LEFT
     4 -> RIGHT
 */
-
-void debugGameBoard(int boardSize, std::vector<int> board) {
-    int row;
-    std::cout << "\n";
-    for (int i = 0; i < boardSize; ++i) {
-        row = i * boardSize;
-        for (int j = 0; j < boardSize; ++j) {
-            std::cout << board[j+row] << " ";
-        }
-        std::cout << "\n";
-    }
-}
-
-void debugArray(std::vector<int> board) {
-    std::cout << "\n";
-    for (int j = 0; j < (int)board.size(); ++j) {
-        std::cout << board[j] << " ";
-    }
-    std::cout << "\n";
-}
 
 bool checkForSolution(std::vector<int> board) {
     int n = 0;
