@@ -186,14 +186,17 @@ void executeStep(int remainingMoves, int maxMoves, int boardSize, int direction,
     }
 }
 
-void solveBoard(int maxMoves, int boardSize, std::vector<int> gameBoard) {
-    hasSolution = false;                //reset the flag for the new board;
-    solutionUsedMoves = maxMoves;       //set solutionUsedMoves to maxMoves
+void solveBoard(int maxMoves, int boardSize, std::vector<int> gameBoard, bool hasSol) {
+    bool isSolved = checkForSolution(gameBoard);
+    hasSolution = isSolved;                         //reset the flag for the new board;
+    solutionUsedMoves = isSolved ? 0 : maxMoves;    //set solutionUsedMoves to maxMoves
 
-    executeStep(maxMoves - 1, maxMoves, boardSize, 1, gameBoard);
-    executeStep(maxMoves - 1, maxMoves, boardSize, 2, gameBoard);
-    executeStep(maxMoves - 1, maxMoves, boardSize, 3, gameBoard);
-    executeStep(maxMoves - 1, maxMoves, boardSize, 4, gameBoard);
+    if(!hasSolution && hasSol) {
+        executeStep(maxMoves - 1, maxMoves, boardSize, 1, gameBoard);
+        executeStep(maxMoves - 1, maxMoves, boardSize, 2, gameBoard);
+        executeStep(maxMoves - 1, maxMoves, boardSize, 3, gameBoard);
+        executeStep(maxMoves - 1, maxMoves, boardSize, 4, gameBoard);
+    }
 
     if (hasSolution) {
         std::cout << solutionUsedMoves << "\n";
@@ -209,6 +212,9 @@ int main() {
     int totalElements;
     int maxMoves;
     int auxNumber;
+    int totalSum = 0;
+    int power = 2;
+    bool hasSol = false;
     std::vector<int> gameBoard; //Data structure to represent the board itself
 
     std::cin >> testCases;
@@ -218,14 +224,23 @@ int main() {
         std::cin >> boardSize;
         std::cin >> maxMoves;
         totalElements = boardSize * boardSize;
+        totalSum = 0;
+        power = 2;
 
         gameBoard.reserve(totalElements);
         //Read Board into Data structure
         for (int element = 0; element < totalElements; ++element) {
             std::cin >> auxNumber;
             gameBoard.push_back(auxNumber);
+            totalSum += auxNumber;
         }
-        solveBoard(maxMoves, boardSize, gameBoard);
+        while(power < totalSum) {
+            power = power * 2;
+            if (power == totalSum) {
+                hasSol = true;
+            }
+        }
+        solveBoard(maxMoves, boardSize, gameBoard, hasSol);
         gameBoard.clear(); //reset vector
     }
     // auto stop = high_resolution_clock::now();
