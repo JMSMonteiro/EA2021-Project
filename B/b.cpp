@@ -8,16 +8,15 @@
 using uint = unsigned int;
 uint arches = 0;
 
-
 // Que é que a gente faz com isto ??? xD
-int mod_abs(int a, int mod) {  
+int modAbs(int a, int mod) {  
     return ((a % mod) + mod) % mod;
 }
-int mod_add(int a, int b, int mod) {  
-    return (mod_abs(a, mod) + mod_abs(b, mod)) % mod;
+int modAdd(int a, int b, int mod) {  
+    return (modAbs(a, mod) + modAbs(b, mod)) % mod;
 }
-int mod_sub(int a, int b, int mod) {  
-    return mod_add(a, -b, mod);
+int modSub(int a, int b, int mod) {  
+    return modAdd(a, -b, mod);
 }
 
 void buildArc(int blockNumber, int blockHeight, int maxHeight, std::vector<uint> arc, int current, bool direction) {
@@ -65,6 +64,7 @@ int main() {
 
     for (int i = 0; i < testCases; ++i){
         std::cin >> blockNumber >> blockHeight >> maxHeight;
+        
         for (int j = 2; j < blockNumber; ++j){
             std::vector<uint> arc(j);
             if (j == 2) {
