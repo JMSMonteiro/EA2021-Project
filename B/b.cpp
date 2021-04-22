@@ -50,7 +50,32 @@ void buildArc(int blockNumber, int blockHeight, int maxHeight, std::vector<uint>
     }
 }
 
-//void 
+void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
+    //If block height == room height    => Impossible (blocks can't go up)
+    //If blockNumber < 3                => Impossible (not enough blocks)
+    if (blockHeight >= maxHeight || blockNumber < 3) {
+        std::cout << 0 << "\n";
+        return;
+    }
+    else if (blockHeight == (maxHeight - 1) && blockNumber >= 3) {
+        std::cout << 1 << "\n";
+        return;
+    }
+    for (int j = 2; j < blockNumber; ++j){
+        std::vector<uint> arc(j);
+            
+        if (j == 2) {
+            arches++;
+        }
+        else {
+            arc[0] = 0;
+            arc[1] = blockHeight; // needs change if second and second to last can have more than 1 block
+            arc[j-2] = blockHeight;
+            arc[j-1] = 0;
+            buildArc(blockNumber, blockHeight, maxHeight, arc, 2, UP);
+        }
+    }
+}
 
 
 int main() {
@@ -64,19 +89,7 @@ int main() {
 
     for (int i = 0; i < testCases; ++i){
         std::cin >> blockNumber >> blockHeight >> maxHeight;
-        
-        for (int j = 2; j < blockNumber; ++j){
-            std::vector<uint> arc(j);
-            if (j == 2) {
-                arches++;
-            }
-            else{
-                arc[0] = 0;
-                arc[1] = blockHeight; // needs change if second and second to last can have more than 1 block
-                arc[j-2] = blockHeight;
-                arc[j-1] = 0;
-                buildArc(blockNumber, blockHeight, maxHeight, arc, 2, UP);
-            }
-        }
+        calculateArch(blockNumber, blockHeight, maxHeight);
     }
+    return 0;
 }
