@@ -57,6 +57,7 @@ void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
         std::cout << 0 << "\n";
         return;
     }
+    //If block height == maxHeight - 1, only one unique arch can be created
     else if (blockHeight == (maxHeight - 1) && blockNumber >= 3) {
         std::cout << 1 << "\n";
         return;
