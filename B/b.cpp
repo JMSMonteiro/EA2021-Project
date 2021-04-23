@@ -86,11 +86,13 @@ int main() {
     //End of Fast(er) I/O
 
     int testCases, blockNumber, blockHeight, maxHeight;
+    
     std::cin >> testCases;
 
     for (int i = 0; i < testCases; ++i){
         std::cin >> blockNumber >> blockHeight >> maxHeight;
         calculateArch(blockNumber, blockHeight, maxHeight);
     }
+    
     return 0;
 }
