@@ -4,11 +4,12 @@
 
 #define DOWN 0
 #define UP 1
+#define MOD 1000000007
 
 using uint = unsigned int;
 uint arches = 0;
 
-// Que é que a gente faz com isto ??? xD
+
 int modAbs(int a, int mod) {  
     return ((a % mod) + mod) % mod;
 }
@@ -22,31 +23,34 @@ int modSub(int a, int b, int mod) {
 void buildArc(int blockNumber, int blockHeight, int maxHeight, std::vector<uint> arc, int current, bool direction) {
     int cur;
 
-    if (current == blockNumber - 2){
-        arches++;
+    if (current == blockNumber - 1 ){
+        arches = modAdd(arches,1,MOD);
         return;
     }
-
-    // Refix for more than 1 block insertions
-    if (direction) {
-        arc[current] = arc[current - 1] + blockHeight - 1; 
-    }   
-    else {
-        arc[current] = arc[current - 1] - blockHeight + 1;
-    }
+    for(int offset = 1;offset<blockHeight;++offset){
+        if (direction) {
+            arc[current] = arc[current - 1] + blockHeight - offset; 
+        }   
+        else {
+            arc[current] = arc[current - 1] - blockHeight + offset;
+        }
+        
+        // If it reaches the n-1 block without failing any rule an arc was successfully made
     
-    // If it reaches the n-2 block without failing any rule an arc was successfully made
- 
-    cur = arc[current];
-    if (cur > maxHeight) {
-        return;
-    }
-    if (cur == maxHeight) {
-        buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1,DOWN); // Call with DOWN ??
-    }     
-    else {
-        buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1, UP);
-        buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1, DOWN);
+        cur = arc[current];
+        if (cur > maxHeight) {
+            return;
+        }
+        if (cur == maxHeight) {
+            buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1,DOWN); // Call with DOWN ??
+        }     
+        else if(direction == DOWN){
+            buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1, DOWN);
+        }
+        else{
+            buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1, UP); 
+            buildArc(blockNumber, blockHeight, maxHeight, arc, current + 1, DOWN);
+        }
     }
 }
 
@@ -54,28 +58,25 @@ void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
     //If block height == room height    => Impossible (blocks can't go up)
     //If blockNumber < 3                => Impossible (not enough blocks)
     if (blockHeight >= maxHeight || blockNumber < 3) {
-        std::cout << 0 << "\n";
+        arches = 0;
         return;
     }
     //If block height == maxHeight - 1, only one unique arch can be created
     else if (blockHeight == (maxHeight - 1) && blockNumber >= 3) {
-        std::cout << 1 << "\n";
+        arches = 1;
         return;
     }
-    for (int j = 2; j < blockNumber; ++j){
+    for (int j = 1; j < blockNumber; ++j){
         std::vector<uint> arc(j);
             
-        if (j == 2) {
-            arches++;
+        if (j == 1) {
+            arches = modAdd(arches,1,MOD);
         }
         else {
             arc[0] = 0;
-            arc[1] = blockHeight; // needs change if second and second to last can have more than 1 block
-            arc[j-2] = blockHeight;
-            arc[j-1] = 0;
-            buildArc(blockNumber, blockHeight, maxHeight, arc, 2, UP);
+            buildArc(j, blockHeight, maxHeight, arc, 1, UP);
         }
-    }
+    } 
 }
 
 
@@ -90,8 +91,10 @@ int main() {
     std::cin >> testCases;
 
     for (int i = 0; i < testCases; ++i){
+        arches = 0;
         std::cin >> blockNumber >> blockHeight >> maxHeight;
         calculateArch(blockNumber, blockHeight, maxHeight);
+        std::cout<<arches<<"\n";
     }
     
     return 0;
