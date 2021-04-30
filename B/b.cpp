@@ -51,7 +51,6 @@ void printArchN(int i) {
 }
 
 void printTable(int blockNumber, int maxHeight) {
-    for (int i = 0; i < blockNumber; ++i) {
     for (int j = 0; j < maxHeight; ++j) {
         for (int i = 0; i < blockNumber; ++i) {
             std::cout << table[i + j * blockNumber] << "\t";
