@@ -11,11 +11,6 @@ using uint = unsigned int;
 uint arches = 0;
 std::vector<std::pair<int, int>> archesDone;
 std::vector<uint> table;
-int lastPieceUsed = 0;
-int piecesUsed = 0;
-int resetValue = 0;
-int newResetValue = 0;
-int minHeight = 0;
 
 bool sortbysec(const std::pair<int, int>& a, const std::pair<int, int>& b) {
     return (a.second > b.second);
@@ -59,20 +54,55 @@ void printTable(int blockNumber, int maxHeight) {
     }
 }
 
-void buildAscending(int blockNumber, int blockHeight, int maxHeight, int usedPieces, int currentHeight) {
-    int index;
+void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
+    int lastPiece = 1;
+    int currentLevelElements = 1;
+    int index = 0;
+    int currentIndex = 0;
+    int val = 0;
+    int remainder = blockHeight - 1;
 
-    if (usedPieces == blockNumber){
-        return;
+    // for (int i = 1; i < blockHeight; ++i) {
+    //     if (currentHeight + (blockHeight) + i > maxHeight) { break ;}
+    //     if (usedPieces + 1 == blockNumber) { break; }
+    //     index = (usedPieces) + ((currentHeight + i) * blockNumber);
+    //     table[index] += 1;
+    //     buildAscending(blockNumber, blockHeight, maxHeight, usedPieces + 1, currentHeight + i);
+    // }
+
+    for (int currentHeight = 1; currentHeight < maxHeight; ++currentHeight) {
+        for (int currentPiece = lastPiece; currentPiece < /*(1 + (currentHeight * (blockNumber - 2)))*/ blockNumber; ++currentPiece) {
+            // if (currentHeight > (blockHeight - 1 ) * currentPiece + 1 ) {
+            //     // doesn't surprass block h - 1, at least one square touches
+            //     break;
+            // }
+            // if (currentPiece == blockNumber - 1 && currentHeight >= blockHeight) {
+            //     continue;
+            // }
+            
+            index = currentPiece + (currentHeight * blockNumber);
+            val = 0;
+            //std::cout << "\tIndex: " << index << "\n";
+            for (int i = 0; i < blockNumber; ++i) {   
+                currentIndex = (index - (blockNumber * (i + 1))) - 1;
+                val += currentIndex >= 0 ? table[currentIndex] : 0;
+            }
+            table[index] = val;
+        }
+
+        //TODO: join these two, for debugging atm
+        // if (lastPiece >= blockNumber) {
+        //     return;
+        // }
+        if (currentHeight + blockHeight >= maxHeight - 1) {
+            return;
+        }
+        currentLevelElements = currentLevelElements * 3;
+        if (currentHeight > 1 && currentHeight + 1 % remainder) {
+            //lastPiece +=1;
+        }
     }
 
-    for (int i = 1; i < blockHeight; ++i) {
-        if (currentHeight + (blockHeight) + i > maxHeight) { break ;}
-        if (usedPieces + 1 == blockNumber) { break; }
-        index = (usedPieces) + ((currentHeight + i) * blockNumber);
-        table[index] += 1;
-        buildAscending(blockNumber, blockHeight, maxHeight, usedPieces + 1, currentHeight + i);
-    }
 }
 
 void makeArches(int blockNumber, int blockHeight,int maxHeight) {
@@ -80,7 +110,7 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
     int archesToAdd = 0;
     
     // std::cout << "\n";
-    // printTable(blockNumber, maxHeight);
+    printTable(blockNumber, maxHeight);
     // std::cout << "\n";
 
     for (int block = 1; block < blockNumber; ++block) {
@@ -120,10 +150,9 @@ void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
         arches = 1;
         return;
     }
-    table[0 + 0 * blockNumber] += 1;
-    archesDone.push_back(std::make_pair(0, 1));
-    resetValue = blockHeight + 1;
-    buildAscending(blockNumber, blockHeight, maxHeight, 1, 0);
+    table[0] = 1;
+    // archesDone.push_back(std::make_pair(0, 1));
+    buildAscending(blockNumber, blockHeight, maxHeight);
     makeArches(blockNumber, blockHeight, maxHeight);
 }
 
