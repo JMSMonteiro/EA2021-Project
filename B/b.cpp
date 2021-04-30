@@ -11,7 +11,6 @@ using uint = unsigned int;
 uint arches = 0;
 std::vector<std::pair<int, int>> archesDone;
 std::vector<uint> table;
-// std::vector<int> indexes;
 int lastPieceUsed = 0;
 int piecesUsed = 0;
 int resetValue = 0;
@@ -52,9 +51,9 @@ void printArchN(int i) {
 }
 
 void printTable(int blockNumber, int maxHeight) {
-    for (int j = 0; j < maxHeight; ++j) {
-        for (int i = 0; i < blockNumber; ++i) {
-            std::cout << table[i + j * blockNumber] << " ";
+    for (int i = 0; i < blockNumber; ++i) {
+        for (int j = 0; j < maxHeight; ++j) {
+            std::cout << table[i + j * blockNumber] << "\t";
         }
         std::cout << "\n";
     }
@@ -62,51 +61,24 @@ void printTable(int blockNumber, int maxHeight) {
 
 void buildAscending(int blockNumber, int blockHeight, int maxHeight, int usedPieces, int currentHeight) {
     int index;
-    // int auxHeight;
-    // int currentPieces;
-    // if (usedPieces > piecesUsed) {
-    //     piecesUsed = usedPieces;
-    // }
 
-    if (usedPieces == blockNumber 
-        //|| currentHeight + blockHeight >= maxHeight - 1
-        // || usedPieces == resetValue 
-        ){
+    if (usedPieces == blockNumber){
         return;
     }
-    // if (depth >=
-    //  blockHeight) {
-    //     std::cout << depth << " | " << blockHeight << "\n";
-    //     //return;
-    // }
 
     for (int i = 1; i < blockHeight; ++i) {
-        // auxHeight = currentHeight + i;
-        // currentPieces = usedPieces + 1;
         if (currentHeight + (blockHeight) + i > maxHeight) { break ;}
         if (usedPieces + 1 == blockNumber) { break; }
         index = (usedPieces) + ((currentHeight + i) * blockNumber);
         table[index] += 1;
-        //archesDone.push_back(std::make_pair(currentHeight + i, usedPieces + 1));
         buildAscending(blockNumber, blockHeight, maxHeight, usedPieces + 1, currentHeight + i);
-        // std::cout << "\t" << usedPieces;
-        // return;
     }
 }
 
 void makeArches(int blockNumber, int blockHeight,int maxHeight) {
-    // bool updatedValue = false;
     int aux, aux2;
-    // int height1, usedPieces1;
-    // int height2, usedPieces2;
     int archesToAdd = 0;
-    // int i = 0;
-    // int curr = 0;
-    // std::sort(archesDone.begin(), archesDone.end(), sortbysec);
-    //std::sort(archesDone.begin(), archesDone.end());
     
-    // printArch();
-
     // std::cout << "\n";
     // printTable(blockNumber, maxHeight);
     // std::cout << "\n";
@@ -133,40 +105,6 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
         archesToAdd = 0;
     }
 
-    // for (std::pair<int, int>& tup : archesDone) {
-    //     height1 = tup.first;
-    //     usedPieces1 = tup.second;
-    //     // if ((height1 + blockHeight - 1) > maxHeight) {continue;}
-
-    //     // if (!updatedValue && resetValue == usedPieces1) {
-    //     //     newResetValue = resetValue + blockHeight + 1;
-    //     //     minHeight = height1;
-    //     // }
-
-    //     for(std::pair<int, int>& tup2 : archesDone) {
-    //         height2 = tup2.first;
-    //         usedPieces2 = tup2.second;
-    //         if (height2 >= height1) {
-    //             continue;
-    //         }
-    //         if (tup != tup2
-    //             &&(height1 < maxHeight
-    //             && height2 < height1 
-    //             && height2 > (height1 - blockHeight)) 
-    //             && usedPieces1 + usedPieces2 <= blockNumber) {
-    //             // std::cout << usedPieces1 << " | " << usedPieces2 << " = " << blockNumber<< "\n";
-    //             // std::cout << height1 << " | " << height2 << "\n\n";
-    //             archesToAdd++;
-    //             // std::cout << "\n\n\n\nHello\n\n\n\n";
-    //             // std::cout << "h1: " << height1 << "\th2: " << height2 << "\n";
-    //             // std::cout << "max: " << blockNumber << "\tu1: " << usedPieces1 << "\tu2: " << usedPieces2 << "\n\n";
-    //         }
-    //     }
-    // arches = modAdd(arches, archesToAdd, MOD);
-    // archesToAdd = 0;
-    // }
-
-    //archesDone.erase(std::remove_if(archesDone.begin(), archesDone.end(), isSmaller))
     return;
 }
 
