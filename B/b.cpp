@@ -59,7 +59,7 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight, int usedPie
     }
 
     if (usedPieces == blockNumber 
-        || currentHeight + blockHeight >= maxHeight - 1
+        //|| currentHeight + blockHeight >= maxHeight - 1
         // || usedPieces == resetValue 
         ){
         return;
@@ -90,9 +90,9 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
     // int i = 0;
     // int curr = 0;
     // std::sort(archesDone.begin(), archesDone.end(), sortbysec);
-    std::sort(archesDone.begin(), archesDone.end());
+    //std::sort(archesDone.begin(), archesDone.end());
     
-    printArch();
+    // printArch();
 
     for (std::tuple<int, int>& tup : archesDone) {
         height1 = std::get<0>(tup);
