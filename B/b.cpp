@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <iostream>
-#include <tuple>
 #include <vector>
 #include <algorithm>
 
@@ -10,7 +9,7 @@
 
 using uint = unsigned int;
 uint arches = 0;
-std::vector<std::tuple<int, int>> archesDone;
+std::vector<std::pair<int, int>> archesDone;
 // std::vector<int> indexes;
 int lastPieceUsed = 0;
 int piecesUsed = 0;
@@ -18,10 +17,10 @@ int resetValue = 0;
 int newResetValue = 0;
 int minHeight = 0;
 
-bool sortbysec(const std::tuple<int, int>& a, const std::tuple<int, int>& b) {
-    return (std::get<1>(a) > std::get<1>(b));
+bool sortbysec(const std::pair<int, int>& a, const std::pair<int, int>& b) {
+    return (a.second > b.second);
 }
-// bool isSmaller(const std::tuple<int, int>& a, const std::tuple <int, int>& b) {
+// bool isSmaller(const std::pair<int, int>& a, const std::pair <int, int>& b) {
 //     return (std::get<0>);
 // }
 
@@ -38,16 +37,16 @@ int modSub(int a, int b, int mod) {
 void printArch() {
     int a, b;
     for (int i = 0; i < (int)archesDone.size(); ++i) {
-        a = std::get<0>(archesDone[i]);
-        b = std::get<1>(archesDone[i]);
+        a = archesDone[i].first;
+        b = archesDone[i].second;
         std::cout << "<" << a << "," << b << ">\n";
     }
 }
 
 void printArchN(int i) {
     int a, b;
-    a = std::get<0>(archesDone[i]);
-    b = std::get<1>(archesDone[i]);
+    a = archesDone[i].first;
+    b = archesDone[i].second;
     std::cout << "\n<" << a << "," << b << ">\n";
 }
 
@@ -75,7 +74,7 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight, int usedPie
         // currentPieces = usedPieces + 1;
         if (currentHeight + (blockHeight) + i > maxHeight) { break ;}
         if (usedPieces + 1 == blockNumber) { break; }
-        archesDone.push_back(std::make_tuple(currentHeight + i, usedPieces + 1));
+        archesDone.push_back(std::make_pair(currentHeight + i, usedPieces + 1));
         buildAscending(blockNumber, blockHeight, maxHeight, usedPieces + 1, currentHeight + i);
         // std::cout << "\t" << usedPieces;
         // return;
@@ -94,9 +93,9 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
     
     // printArch();
 
-    for (std::tuple<int, int>& tup : archesDone) {
-        height1 = std::get<0>(tup);
-        usedPieces1 = std::get<1>(tup);
+    for (std::pair<int, int>& tup : archesDone) {
+        height1 = tup.first;
+        usedPieces1 = tup.second;
         // if ((height1 + blockHeight - 1) > maxHeight) {continue;}
 
         // if (!updatedValue && resetValue == usedPieces1) {
@@ -104,9 +103,9 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
         //     minHeight = height1;
         // }
 
-        for(std::tuple<int, int>& tup2 : archesDone) {
-            height2 = std::get<0>(tup2);
-            usedPieces2 = std::get<1>(tup2);
+        for(std::pair<int, int>& tup2 : archesDone) {
+            height2 = tup2.first;
+            usedPieces2 = tup2.second;
             if (height2 >= height1) {
                 continue;
             }
@@ -143,7 +142,7 @@ void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
         arches = 1;
         return;
     }
-    archesDone.push_back(std::make_tuple(0, 1));
+    archesDone.push_back(std::make_pair(0, 1));
     resetValue = blockHeight + 1;
     buildAscending(blockNumber, blockHeight, maxHeight, 1, 0);
     makeArches(blockNumber, blockHeight, maxHeight);
