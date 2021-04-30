@@ -108,11 +108,11 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
     // printArch();
 
     // std::cout << "\n";
-    //printTable(blockNumber, maxHeight);
+    // printTable(blockNumber, maxHeight);
     // std::cout << "\n";
 
-    for (int height = 0; height < maxHeight; ++height) {
-        for (int block = 1; block < blockNumber; ++block) {
+    for (int block = 1; block < blockNumber; ++block) {
+        for (int height = 0; height < maxHeight; ++height) {
             aux = table[block + (height * blockNumber)];
             if (aux) {
                 for (int axheight = (height - blockHeight + 1) > 0 
@@ -124,6 +124,9 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
                         }
                     }
                 }
+            }
+            if (height > ((block + 1) * (blockHeight) ) + 1) {
+                break;
             }
         }
         arches = modAdd(arches, archesToAdd, MOD);
