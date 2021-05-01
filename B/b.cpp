@@ -129,15 +129,15 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
 }
 
 void makeArches(int blockNumber, int blockHeight,int maxHeight) {
-    int aux, aux2;
-    int archesToAdd = 0;
+    uint aux, aux2;
+    uint archesToAdd = 0;
     
     // std::cout << "\n";
     // printTable(blockNumber, maxHeight);
     // std::cout << "\n";
 
-    for (int block = 1; block < blockNumber; ++block) {
-        for (int height = 0; height < maxHeight; ++height) {
+    for (int block = 1; block < blockNumber + 1; ++block) {
+        for (int height = block; height < maxHeight - blockHeight + 1; ++height) {
             aux = table[block + (height * blockNumber)];
             if (aux) {
                 for (int axheight = (height - blockHeight + 1) > 0 
@@ -145,7 +145,7 @@ void makeArches(int blockNumber, int blockHeight,int maxHeight) {
                     for (int axblock = 0; axblock + 1 + block < blockNumber; ++axblock) {
                         aux2 = table[axblock + (axheight * blockNumber)];
                         if (aux2) {
-                            archesToAdd += modMul(aux2, aux, MOD);
+                            archesToAdd = modAdd(archesToAdd, modMul(aux2, aux, MOD), MOD);
                         }
                     }
                 }
