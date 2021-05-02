@@ -160,6 +160,10 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
     uint leftmost1 = 0;
     uint line = 1;
     uint col = 0;
+    uint first = 0;
+    uint jfirst = 0;
+
+
     if (debug) {
         std::cout << "\n";
         printTable(blockNumber, maxHeight);
@@ -168,15 +172,20 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
 
     for(int i = blockNumber + 1; i < maxHeight * blockNumber; ++i){
         // if (debug) std::cout<<"Line: "<<line<<" Col: "<<col<<" Val:"<<table[i]<<" Index:"<<i<<"\n";
+        if (leftmost == 0) { first = i; }
         leftmost++;
         leftmost1 = 0;
         //int retro = i - ((blockHeight-1) * blockNumber) - (((blockHeight - 1) * blockNumber) % blockNumber);
         int retro = ((i / blockNumber) - (blockHeight - 1)) * blockNumber ;
+        
         if (retro <= 0){ retro = 0;} else {retro += 1;}
+        
         if (table[i]) {
             if (debug) std::cout << "retro = " << retro << "\n";
+            
             for(int j = retro; j / blockNumber < i / blockNumber; ++j){
                 if (table[j] == 0) {continue;}
+                if (leftmost1 == 0) {jfirst = j;}
                 leftmost1 ++;
                 if ((j % blockNumber) + (i % blockNumber) >= blockNumber - 1) {continue;} 
                 if (debug) std::cout << "\t\ti = " << i <<"\t\tj = " << j << "\n";
@@ -184,8 +193,8 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
                     arches = modAdd(arches, modMul(table[i], table[j], MOD),MOD);
                 }
                 if (table[j+1] == 0){
-                    if(table[j + blockNumber] == 0){
-                        j = j + blockNumber; 
+                    if(table[j + blockNumber - (j - jfirst)] == 0){
+                        j = j + blockNumber - (j - jfirst); 
                     // if (debug) if (i == 18) std::cout << "\t\t" << j << "\t\tAAAAAAAAHHHHHHHHHHHHHHHH\n";
                     }
                     else{
@@ -204,9 +213,9 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
         
         if(table[i+1] == 0){
             // if (debug) std::cout << "\t\t\tI'm " << table[i+1] << " Index: " << i + 1 << "\n";
-            if(table[i + blockNumber] == 0){
+            if(table[i + blockNumber - (i - first)] == 0){
                 // if (debug) std::cout << "old i = " << i <<"\n";
-                i = i + blockNumber; 
+                i = i + blockNumber - (i - first); 
                 // if (debug)std::cout << "new i = " << i <<"\n";
             }
             else {
