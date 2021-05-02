@@ -40,7 +40,10 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
   int startValue = 1;
 
   for (int currentHeight = 1; currentHeight < maxHeight; ++currentHeight) {
-    startValue = (currentHeight - 1) / (blockHeight - 1);
+    startValue = (currentHeight) / (blockHeight - 1);
+    if (startValue >= blockNumber) {
+      break;
+    }
     for (int currentPiece = startValue; currentPiece < blockNumber - 1;
          ++currentPiece) {
       if (currentHeight + blockHeight > maxHeight) {
