@@ -70,7 +70,8 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
     int val = 0;
     int remainder = blockHeight - 1;
     bool updated = false;
-    int diff = 0;
+    // int diff = 0;
+    // int midValue = 0;
 
     // for (int i = 1; i < blockHeight; ++i) {
     //     if (currentHeight + (blockHeight) + i > maxHeight) { break ;}
@@ -109,15 +110,26 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
             }
             //End of IDEA
 
-            if (currentHeight > currentPiece + (currentLevelElements / 2)) {
-                diff = (currentHeight - (currentPiece + currentLevelElements));
-                currentIndex = index - (diff * blockNumber);
-                if (debug) {
-                    std::cout << "\t[" << currentPiece<<","<<currentHeight<<"] - " << index << "\t-\t" << currentIndex << "\n";
-                    // std::cout << index << " | " << currentIndex << "\n";
-                }
-                //val = table[]
-            }
+            // midValue = currentPiece + (currentLevelElements / 2);
+            // if (currentHeight > midValue) {
+            //     // diff = (currentHeight - (currentPiece + currentLevelElements));
+                
+            //     // diff = index - (currentPiece + ((currentPiece + (currentLevelElements / 2) - 1) * blockNumber));
+            //     //currentIndex = index - diff;
+                
+            //     diff = currentHeight - midValue;
+            //     currentIndex = currentPiece + ((midValue - diff) * blockNumber);
+                
+            //     // diff = currentHeight - (currentPiece + (currentLevelElements / 2) + 1);
+            //     // currentIndex = (index - (blockNumber * diff));
+            //     if (debug) {
+            //         std::cout << "\t[" << currentPiece<<","<<currentHeight<<"] - " << index << "\t-\t" << currentIndex << "\t| " << diff << "\n";
+            //         // std::cout << index << " | " << currentIndex << "\n";
+            //     }
+            //     table[index] = table[currentIndex];
+            //     continue;
+            //     //val = table[]
+            // }
             for (int i = 1; i < blockHeight; ++i) {   
                 // if (index == 18) { std::cout << "\nHey\n";}
                 // std::cout << "\tIndex: " << index << " <=> " << i << "\n";
@@ -140,6 +152,82 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
         }
     }
 
+}
+
+void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
+    // uint archesToAdd = 0;
+    uint leftmost = 0;
+    uint leftmost1 = 0;
+    uint line = 1;
+    uint col = 0;
+    if (debug) {
+        std::cout << "\n";
+        printTable(blockNumber, maxHeight);
+        std::cout << "\n";
+    }
+
+    for(int i = blockNumber + 1; i < maxHeight * blockNumber; ++i){
+        // if (debug) std::cout<<"Line: "<<line<<" Col: "<<col<<" Val:"<<table[i]<<" Index:"<<i<<"\n";
+        leftmost++;
+        //int retro = i - ((blockHeight-1) * blockNumber) - (((blockHeight - 1) * blockNumber) % blockNumber);
+        int retro = ((i / blockNumber) - (blockHeight - 1)) * blockNumber ;
+        if (retro < 0){ retro = 0;}
+        if (table[i]) {
+            if (debug) std::cout << "retro = " << retro << "\n";
+            for(int j = retro; j / blockNumber < i / blockNumber; ++j){
+                if (j == 0) {continue;}
+                leftmost1 ++;
+                //if ((j % blockNumber) + (i % blockNumber) + 1 > blockNumber) {break;} 
+                if (debug) std::cout << "\t\ti = " << i <<"\t\tj = " << j << "\n";
+                if (table[j]){
+                    arches = modAdd(arches, modMul(table[i], table[j], MOD),MOD);
+                }
+                if (table[j+1] == 0){
+                    if(table[j + blockNumber] == 0){
+                        j = j + blockNumber; 
+                    if (i == 18) std::cout << "\t\t" << j << "\t\tAAAAAAAAHHHHHHHHHHHHHHHH\n";
+                    }
+                    else{
+                        j = j + blockNumber - leftmost1;
+                    } 
+                    leftmost1 = 0;
+                    // col = 0;
+                    // line++;
+                    if(table[j+1] == 0 && table[j + 1 + blockNumber] == 0 && (j+1) % blockNumber == 0){
+                        if (debug) std::cout << "\n\tBREAK! j = " << j << "\n";
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if(table[i+1] == 0){
+            // if (debug) std::cout << "\t\t\tI'm " << table[i+1] << " Index: " << i + 1 << "\n";
+            if(table[i + blockNumber] == 0){
+                // if (debug) std::cout << "old i = " << i <<"\n";
+                i = i + blockNumber; 
+                // if (debug)std::cout << "new i = " << i <<"\n";
+            }
+            else {
+                // if (debug) std::cout << "old i = " << i <<"\n";
+                i = i + blockNumber - leftmost;
+                // if (debug) std::cout << "new i = " << i <<"\n";
+            }
+            leftmost = 0;
+            col = 0;
+            line++;
+            if(table[i+1] == 0 && table[i + 1 + blockNumber]){
+                if (debug) std::cout << "\nBREAK!\n";
+                break;
+            }
+            if (debug) std::cout << "New i: " << i << "\n";
+        }
+        col++;
+    }
+        // arches = modAdd(arches, archesToAdd, MOD);
+        // archesToAdd = 0;
+
+    return;
 }
 
 void makeArches(int blockNumber, int blockHeight,int maxHeight) {
@@ -192,7 +280,8 @@ void calculateArch(int blockNumber, int blockHeight, int maxHeight) {
     table[0] = 1;
     // archesDone.push_back(std::make_pair(0, 1));
     buildAscending(blockNumber, blockHeight, maxHeight);
-    makeArches(blockNumber, blockHeight, maxHeight);
+    // makeArches(blockNumber, blockHeight, maxHeight);
+    makeArches2(blockNumber, blockHeight, maxHeight);
 }
 
 
