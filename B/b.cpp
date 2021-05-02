@@ -9,10 +9,10 @@ using uint = unsigned int;
 uint arches = 0;
 std::vector<uint> table;
 
-int modAbs(const int &a) { return ((a % MOD) + MOD) % MOD; }
-int modAdd(const int &a, const int &b) { return (modAbs(a) + modAbs(b)) % MOD; }
-int modSub(const int &a, const int &b) { return modAdd(a, -b); }
-int modMul(const int &a, const int &b) {
+constexpr int modAbs(const int &a) { return ((a % MOD) + MOD) % MOD; }
+constexpr int modAdd(const int &a, const int &b) { return (modAbs(a) + modAbs(b)) % MOD; }
+constexpr int modSub(const int &a, const int &b) { return modAdd(a, -b); }
+constexpr int modMul(const int &a, const int &b) {
   long long int la = modAbs(a);
   long long int lb = modAbs(b);
   long long int lm = MOD;
