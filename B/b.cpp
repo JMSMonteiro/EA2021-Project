@@ -12,7 +12,7 @@ using uint = unsigned int;
 uint arches = 0;
 std::vector<std::pair<int, int>> archesDone;
 std::vector<uint> table;
-bool debug = true;
+bool debug = !true;
 
 bool sortbysec(const std::pair<int, int>& a, const std::pair<int, int>& b) {
     return (a.second > b.second);
@@ -169,15 +169,16 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
     for(int i = blockNumber + 1; i < maxHeight * blockNumber; ++i){
         // if (debug) std::cout<<"Line: "<<line<<" Col: "<<col<<" Val:"<<table[i]<<" Index:"<<i<<"\n";
         leftmost++;
+        leftmost1 = 0;
         //int retro = i - ((blockHeight-1) * blockNumber) - (((blockHeight - 1) * blockNumber) % blockNumber);
         int retro = ((i / blockNumber) - (blockHeight - 1)) * blockNumber ;
-        if (retro < 0){ retro = 0;}
+        if (retro <= 0){ retro = 0;} else {retro += 1;}
         if (table[i]) {
             if (debug) std::cout << "retro = " << retro << "\n";
             for(int j = retro; j / blockNumber < i / blockNumber; ++j){
-                if (j == 0) {continue;}
+                if (table[j] == 0) {continue;}
                 leftmost1 ++;
-                //if ((j % blockNumber) + (i % blockNumber) + 1 > blockNumber) {break;} 
+                if ((j % blockNumber) + (i % blockNumber) >= blockNumber - 1) {continue;} 
                 if (debug) std::cout << "\t\ti = " << i <<"\t\tj = " << j << "\n";
                 if (table[j]){
                     arches = modAdd(arches, modMul(table[i], table[j], MOD),MOD);
@@ -185,7 +186,7 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
                 if (table[j+1] == 0){
                     if(table[j + blockNumber] == 0){
                         j = j + blockNumber; 
-                    if (i == 18) std::cout << "\t\t" << j << "\t\tAAAAAAAAHHHHHHHHHHHHHHHH\n";
+                    // if (debug) if (i == 18) std::cout << "\t\t" << j << "\t\tAAAAAAAAHHHHHHHHHHHHHHHH\n";
                     }
                     else{
                         j = j + blockNumber - leftmost1;
@@ -194,7 +195,7 @@ void makeArches2(int blockNumber, int blockHeight,int maxHeight) {
                     // col = 0;
                     // line++;
                     if(table[j+1] == 0 && table[j + 1 + blockNumber] == 0 && (j+1) % blockNumber == 0){
-                        if (debug) std::cout << "\n\tBREAK! j = " << j << "\n";
+                        if (debug) std::cout << "\n\tBREAK! j = " << j << " |i = " << i <<"\n";
                         break;
                     }
                 }
