@@ -37,20 +37,22 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
   int val = 0;
   int diff = 0;
   int midValue = 0;
+  int startValue = 1;
 
   for (int currentHeight = 1; currentHeight < maxHeight; ++currentHeight) {
-    for (int currentPiece = 1; currentPiece < blockNumber - 1; ++currentPiece) {
+    startValue = (currentHeight - 1) / (blockHeight - 1);
+    for (int currentPiece = startValue; currentPiece < blockNumber - 1;
+         ++currentPiece) {
       if (currentHeight + blockHeight > maxHeight) {
         return;
       }
       currentLevelElements = 1 + (currentPiece * (blockHeight - 2));
-
-      index = currentPiece + (currentHeight * blockNumber);
-      val = 0;
-
       if (currentHeight >= currentPiece + currentLevelElements) {
         continue;
       }
+
+      index = currentPiece + (currentHeight * blockNumber);
+      val = 0;
 
       midValue = currentPiece + (currentLevelElements - 1 / 2);
 
