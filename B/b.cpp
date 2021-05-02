@@ -134,7 +134,10 @@ void buildAscending(int blockNumber, int blockHeight, int maxHeight) {
                 // if (index == 18) { std::cout << "\nHey\n";}
                 // std::cout << "\tIndex: " << index << " <=> " << i << "\n";
                 currentIndex = (index - (blockNumber * i)) - 1;
-                val += currentIndex >= 0 ? table[currentIndex] : 0;
+                if (currentIndex >= 0) {
+                    val = modAdd(val, table[currentIndex], MOD);
+                }
+                //val += currentIndex >= 0 ? table[currentIndex] : 0;
             }
             table[index] = val;
             // std::cout << "\t\tIndex: " << index << "\n";
