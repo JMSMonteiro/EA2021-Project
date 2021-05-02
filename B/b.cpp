@@ -11,7 +11,7 @@ std::vector<uint> table;
 
 int modAbs(const int &a) { return ((a % MOD) + MOD) % MOD; }
 int modAdd(const int &a, const int &b) { return (modAbs(a) + modAbs(b)) % MOD; }
-int modSub(int &a, int &b) { return modAdd(a, -b); }
+int modSub(const int &a, const int &b) { return modAdd(a, -b); }
 int modMul(const int &a, const int &b) {
   long long int la = modAbs(a);
   long long int lb = modAbs(b);
