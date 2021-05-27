@@ -13,20 +13,17 @@
 using uint = unsigned int;
 using vec = std::vector<int>;
 using matrix =   std::vector<vec>;     
-using p = std::pair<int>;
+using p = std::pair<int,int>;
 using pp = std::pair<int,p>;
 using pv = std::vector<pp>;
 
 // Kruskal
 
-void setK(vec v,vec &parent, vec &rank){
-  
-  for(int i=0;i<v.size();++i){
+void setK(int n,vec &parent, vec &rank){
+  for(int i= 0;i<=n;++i){ 
       parent[i] = i; 
       rank[i] = 0;
-      i++;
   }
-
 }
 
 int findK(int i,vec &parent) {
@@ -41,7 +38,7 @@ void linkK(int u,int v,vec &parent , vec &rank){
 
   if(rank[u] > rank[v]) parent[v] = u;
   else parent[u] = v;
-  if(rank[u] > rank[v]) rank[v]++;
+  if(rank[u] == rank[v]) rank[v]++;
 
 }
 
@@ -61,19 +58,39 @@ bool PCompare (pp a, pp b)
 
 
 
-void kruskal(const matrix graph,vec circuit,vec &parent,vec &rank ) {
+int kruskal(const matrix graph,vec circuit,int n) {
+    vec parent(n+1);
+    vec rank(n+1);
     pv weights;
-    for(int c= 0;c<circuit.size;++c){
-        setK(circuit[c],parent,rank);
-        for(int k = 0;k<c;++k){
-            weights.push_back(std::make_pair(graph[circuit[c]][circuit[k]],std::make_pair(circuit[c],circuit[k])));
-        }
-        
+    
+
+    //Loop through components and add significant graph connection values to a list
+    setK(n,parent,rank);
+    int csize = (int)circuit.size();
+    for(int c= 0;c<csize;++c){
+      for(int k = 0;k<csize;++k){
+              if(c==k)continue;
+              if(graph[circuit[c]][circuit[k]]!=0) weights.push_back(std::make_pair(graph[circuit[c]][circuit[k]],std::make_pair(circuit[c],circuit[k])));
+          }
     }
-    std::sort(weights.start(),weights.end(),PCompare());
+
+    int longest = 0; 
+
+    //sort the graph list
+    std::sort(weights.begin(),weights.end(),PCompare);
+
+    //Loop thorugh the weights and check if there is any union between 2 sorted vertexes
     for(auto w: weights){
-      
+      int u = w.second.first;
+      int v = w.second.second;
+      if(findK(u,parent) != findK(v,parent)){
+        unionK(u,v,parent,rank);
+        longest += w.first;
+      }
     }
+
+    //Return the sum of the distances between connected points
+    return longest;
 }
 
 
@@ -84,7 +101,7 @@ void tarjan(const int v,const matrix graph,vec &dfs,vec &low,matrix &scc,vec &st
     dfs[v]=low[v]=index++;
     s.push(v);
     stacked[v]=true;
-    for(int i= 0;i<graph[v].size();i++){
+    for(int i= 0;i<(int)graph[v].size();i++){
         if( graph[v][i] != 0){
         if(dfs[i]==-1){
             tarjan(i,graph,dfs,low,scc,stacked,index);
@@ -118,11 +135,10 @@ int main() {
 
   int testCases;
   int POIs, conns, questions;
-  uint startPoint, endPoint, distance,index;;
-  int circuits,largest,longest;
-
+  uint startPoint, endPoint, distance,index;
+  int circuits,largest,longest,total;
   std::cin >> testCases;
-  
+
   for (int i = 0; i < testCases; ++i) {
 
     std::cin >> POIs >> conns >> questions;
@@ -130,14 +146,12 @@ int main() {
     matrix scc;
     vec dfs(POIs,-1);
     vec low(POIs);
-    vec parent(POIs);
-    vec rank(POIs);
-
     if(conns == 0){
       for(int c = 0; c< questions;++c){
         std::cout<<"0"<<WS;
       }
       std::cout<<LF;
+      continue;
     }
     for (int j = 0; j < conns; ++j) {
       std::cin >> startPoint >> endPoint >> distance;
@@ -146,51 +160,32 @@ int main() {
       graph[startPoint][endPoint] = distance;
 
     }
-
-    if(DEBUG){
-      for(auto g: graph){
-        for(auto gg: g)
-          std::cout<<gg<<WS;
-         std::cout<<LF;
-      }
-    }
-
-
     vec stacked(POIs,0);
     index = 0;
 
     for(int i= 0;i<POIs;++i){
       if(dfs[i] == -1)  tarjan(i,graph,dfs,low,scc,stacked,index);
     }
-
-    if(DEBUG){
-      std::cout<<LF<<LF;
-      std::cout<<"DFS: ";  
-      for(auto d: dfs)  std::cout<<d<<WS;
-      std::cout<<LF<<LF;
-      std::cout<<"LOW: ";  
-      for(auto l: low) std::cout<<l<<WS;
-      std::cout<<LF<<LF;
-    }
-
+    total = 0;
     circuits = 0;
     largest = 0;
     longest = 0;
+    int comp ;
     for(auto i:scc){ 
-      for(auto j: i) {
-      }
       int k = i.size();
-      if(k==1) continue;
-      else circuits++;
+      if(k==1) continue;  
+      circuits++;
+      comp = kruskal(graph,i,POIs);
+      total+= comp;
+      longest = std::max(longest,comp);
       largest = std::max(largest,k);
     }
-    if(circuits == 0) {largest = 0;longest = 0;}
+    if(circuits == 0) {largest = 0;longest = 0;total=0;}
     std::cout<<circuits;
     if(questions >= 2)  std::cout<<WS<<largest;
     if(questions >= 3)  std::cout<<WS<<longest;
-    if(questions == 4)  std::cout<<WS<<"kruskal todo";
+    if(questions == 4)  std::cout<<WS<<total;
      std::cout<<LF;
-  }
-  
+    }
   return 0;
 }
