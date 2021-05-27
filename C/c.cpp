@@ -50,7 +50,7 @@ void unionK(int u, int v, vec &parent, vec &rank) {
 
 bool PCompare(pp a, pp b) { return a.first < b.first; }
 
-int kruskal(const matrix graph, vec circuit, int n) {
+int kruskal(const matrix &graph, const vec &circuit, int n) {
   vec parent(n + 1);
   vec rank(n + 1);
   pv weights;
@@ -91,7 +91,7 @@ int kruskal(const matrix graph, vec circuit, int n) {
 }
 
 // Tarjan
-void tarjan(const int v, const matrix graph, vec &dfs, vec &low, matrix &scc,
+void tarjan(const int v, const matrix &graph, vec &dfs, vec &low, matrix &scc,
             vec &stacked, uint &index) {
   static std::stack<int> s;
   dfs[v] = low[v] = index++;
@@ -140,7 +140,10 @@ int main() {
     vec low(POIs);
     if (conns == 0) {
       for (int c = 0; c < questions; ++c) {
-        std::cout << "0" << WS;
+        if (c < questions - 1)
+          std::cout << "0" << WS;
+        else
+          std::cout << "0";
       }
       std::cout << LF;
       continue;
