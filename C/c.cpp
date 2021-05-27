@@ -27,24 +27,24 @@ void setK(int n, vec &parent, vec &rank) {
 
 int findK(int i, vec &parent) {
 
-  if (parent[i] != i)
+  if (parent[i] != i) {
     parent[i] = findK(parent[i], parent);
-
+  }
   return parent[i];
 }
 
 void linkK(int u, int v, vec &parent, vec &rank) {
-
-  if (rank[u] > rank[v])
+  if (rank[u] > rank[v]) {
     parent[v] = u;
-  else
+  } else {
     parent[u] = v;
-  if (rank[u] == rank[v])
+  }
+  if (rank[u] == rank[v]) {
     rank[v]++;
+  }
 }
 
 void unionK(int u, int v, vec &parent, vec &rank) {
-
   linkK(findK(u, parent), findK(v, parent), parent, rank);
 }
 
@@ -61,12 +61,14 @@ int kruskal(const matrix &graph, const vec &circuit, int n) {
   int csize = (int)circuit.size();
   for (int c = 0; c < csize; ++c) {
     for (int k = 0; k < csize; ++k) {
-      if (c == k)
+      if (c == k) {
         continue;
-      if (graph[circuit[c]][circuit[k]] != 0)
+      }
+      if (graph[circuit[c]][circuit[k]] != 0) {
         weights.push_back(
             std::make_pair(graph[circuit[c]][circuit[k]],
                            std::make_pair(circuit[c], circuit[k])));
+      }
     }
   }
 
@@ -80,6 +82,7 @@ int kruskal(const matrix &graph, const vec &circuit, int n) {
   for (auto w : weights) {
     int u = w.second.first;
     int v = w.second.second;
+
     if (findK(u, parent) != findK(v, parent)) {
       unionK(u, v, parent, rank);
       longest += w.first;
@@ -102,8 +105,9 @@ void tarjan(const int v, const matrix &graph, vec &dfs, vec &low, matrix &scc,
       if (dfs[i] == -1) {
         tarjan(i, graph, dfs, low, scc, stacked, index);
         low[v] = std::min(low[v], low[i]);
-      } else if (stacked[i] == true)
+      } else if (stacked[i] == true) {
         low[v] = std::min(low[v], dfs[i]);
+      }
     }
   }
   if (dfs[v] == low[v]) {
@@ -129,66 +133,85 @@ int main() {
   int POIs, conns, questions;
   uint startPoint, endPoint, distance, index;
   int circuits, largest, longest, total;
+  int comp;
   std::cin >> testCases;
 
   for (int i = 0; i < testCases; ++i) {
-
     std::cin >> POIs >> conns >> questions;
+
     matrix graph(POIs, vec(POIs, 0));
     matrix scc;
     vec dfs(POIs, -1);
     vec low(POIs);
     if (conns == 0) {
       for (int c = 0; c < questions; ++c) {
-        if (c < questions - 1)
+        if (c < questions - 1) {
           std::cout << "0" << WS;
-        else
+        } else {
           std::cout << "0";
+        }
       }
       std::cout << LF;
       continue;
     }
+
     for (int j = 0; j < conns; ++j) {
       std::cin >> startPoint >> endPoint >> distance;
       startPoint--;
       endPoint--;
       graph[startPoint][endPoint] = distance;
     }
+
     vec stacked(POIs, 0);
     index = 0;
 
     for (int i = 0; i < POIs; ++i) {
-      if (dfs[i] == -1)
+      if (dfs[i] == -1) {
         tarjan(i, graph, dfs, low, scc, stacked, index);
+      }
     }
+
     total = 0;
     circuits = 0;
     largest = 0;
     longest = 0;
-    int comp;
+
     for (auto i : scc) {
       int k = i.size();
-      if (k == 1)
+
+      if (k == 1) {
         continue;
+      }
+
       circuits++;
       comp = kruskal(graph, i, POIs);
       total += comp;
       longest = std::max(longest, comp);
       largest = std::max(largest, k);
     }
+
     if (circuits == 0) {
       largest = 0;
       longest = 0;
       total = 0;
     }
+
     std::cout << circuits;
-    if (questions >= 2)
+
+    if (questions >= 2) {
       std::cout << WS << largest;
-    if (questions >= 3)
+    }
+
+    if (questions >= 3) {
       std::cout << WS << longest;
-    if (questions == 4)
+    }
+
+    if (questions == 4) {
       std::cout << WS << total;
+    }
+
     std::cout << LF;
   }
+
   return 0;
 }
