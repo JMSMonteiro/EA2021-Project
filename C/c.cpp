@@ -8,7 +8,6 @@
 
 #define WS " "
 #define LF "\n"
-#define DEBUG 0
 using uint = unsigned int;
 using vec = std::vector<int>;
 using matrix = std::vector<vec>;
@@ -17,7 +16,6 @@ using pp = std::pair<int, p>;
 using pv = std::vector<pp>;
 
 // Kruskal
-
 void setK(int n, vec &parent, vec &rank) {
   for (int i = 0; i <= n; ++i) {
     parent[i] = i;
@@ -30,6 +28,7 @@ int findK(int i, vec &parent) {
   if (parent[i] != i) {
     parent[i] = findK(parent[i], parent);
   }
+
   return parent[i];
 }
 
@@ -39,6 +38,7 @@ void linkK(int u, int v, vec &parent, vec &rank) {
   } else {
     parent[u] = v;
   }
+
   if (rank[u] == rank[v]) {
     rank[v]++;
   }
@@ -64,6 +64,7 @@ int kruskal(const matrix &graph, const vec &circuit, int n) {
       if (c == k) {
         continue;
       }
+
       if (graph[circuit[c]][circuit[k]] != 0) {
         weights.push_back(
             std::make_pair(graph[circuit[c]][circuit[k]],
@@ -184,10 +185,12 @@ int main() {
       }
 
       circuits++;
-      comp = kruskal(graph, i, POIs);
-      total += comp;
-      longest = std::max(longest, comp);
       largest = std::max(largest, k);
+      if (questions >= 3) {
+        comp = kruskal(graph, i, POIs);
+        total += comp;
+        longest = std::max(longest, comp);
+      }
     }
 
     if (circuits == 0) {
